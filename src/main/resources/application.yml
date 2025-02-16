@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: Suhbatchi
+
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/suxbatchi
+    password: Diyor2412
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+
+
+otp:
+  base-url: https://notify.eskiz.uz/api
