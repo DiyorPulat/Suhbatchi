@@ -4,8 +4,8 @@ spring:
 
   datasource:
     username: postgres
-    url: jdbc:postgresql://localhost:5432/suxbatchi
-    password: Diyor2412
+    url: jdbc:postgresql://shortline.proxy.rlwy.net:12259/railway
+    password: UlEpPrnqbAaHYSfQLVshlxHICNIGeWsH
     driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: false
