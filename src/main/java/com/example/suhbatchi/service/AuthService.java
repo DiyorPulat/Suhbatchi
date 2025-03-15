@@ -40,6 +40,10 @@ public class AuthService {
     public Cookie createCokkie(String key, String value) {
         Cookie cookie = new Cookie(key, value);
         cookie.setHttpOnly(true);
+        cookie.setMaxAge(3600);
+        cookie.setPath("/");
+        cookie.setSecure(true);
+        cookie.setAttribute("SameSite", "None");
         return cookie;
     }
 
