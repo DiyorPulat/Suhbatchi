@@ -44,6 +44,7 @@ public class AuthService {
         cookie.setPath("/");
         cookie.setSecure(true);
         cookie.setAttribute("SameSite", "None");
+        cookie.setAttribute("Partitioned", "");
         return cookie;
     }
 
