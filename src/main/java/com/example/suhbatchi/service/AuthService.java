@@ -42,9 +42,7 @@ public class AuthService {
         cookie.setHttpOnly(true);
         cookie.setMaxAge(3600);
         cookie.setPath("/");
-        cookie.setSecure(true);
-        cookie.setAttribute("SameSite", "None");
-        cookie.setAttribute("Partitioned", "");
+        cookie.setSecure(false);
         return cookie;
     }
 
