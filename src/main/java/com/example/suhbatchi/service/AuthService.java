@@ -39,7 +39,6 @@ public class AuthService {
 
     public Cookie createCokkie(String key, String value) {
         Cookie cookie = new Cookie(key, value);
-        cookie.setPath("/");
         cookie.setHttpOnly(true);
         return cookie;
     }
