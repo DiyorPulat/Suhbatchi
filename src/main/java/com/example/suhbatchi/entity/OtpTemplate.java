@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -18,6 +20,17 @@ public class OtpTemplate {
     private String otpStatus;
     private String phoneNumber;
     private Integer messageId;
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    private LocalDateTime createdAt;
+
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public void setId(Long id) {
         this.id = id;

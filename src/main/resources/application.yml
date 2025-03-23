@@ -3,8 +3,8 @@ spring:
     name: Suhbatchi
 
   datasource:
-    username: postgres
     url: jdbc:postgresql://shortline.proxy.rlwy.net:12259/railway
+    username: postgres
     password: UlEpPrnqbAaHYSfQLVshlxHICNIGeWsH
     driver-class-name: org.postgresql.Driver
   jpa:
