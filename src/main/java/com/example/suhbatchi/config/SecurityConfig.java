@@ -41,6 +41,7 @@ public class SecurityConfig {
                     config.setAllowedOrigins(List.of("*")); // yoki frontend domenini qo‘ying
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
+                    config.setAllowCredentials(true);
                     return config;
                 }))
                 .authorizeHttpRequests(auth -> auth
