@@ -19,6 +19,15 @@ public class User {
     private String lastName;
     private String phoneNumber;
     private String passwordHash;
+    private Boolean IsActiveUser;
+
+    public Boolean getActiveUser() {
+        return IsActiveUser;
+    }
+
+    public void setActiveUser(Boolean activeUser) {
+        IsActiveUser = activeUser;
+    }
 
     public void setClientId(String client_id) {
         this.clientId = client_id;

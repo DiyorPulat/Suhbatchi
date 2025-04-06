@@ -61,28 +61,12 @@ public class AuthController {
                 return ResponseEntity.badRequest().body("PhoneNumber in token is missing");
             }
             authService.savePassword(passwordRequest, phoneNumber);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().body("Token is invalid or expired");
-    }
-
-
-    @GetMapping("/send-message")
-    public ResponseEntity<?> sendMessage(@RequestHeader("Authorization") String authHeader) {
-        if (authService.isValidToken(authHeader)) {
-            log.info("auth : {}", authHeader);
-            String token = authHeader.substring(7);
-            String phoneNumber = jwtUtils.extractUsername(token);
-            log.info("phone number : {}", phoneNumber);
-            if (phoneNumber.isEmpty()) {
-                return ResponseEntity.badRequest().body("PhoneNumber in token is missing");
-            }
-            log.info("phonenumeb : {}", phoneNumber);
             authService.registerClient(phoneNumber);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().body("Token is invalid or expired");
     }
+
 
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@RequestBody VerifyRequest verifyRequest, @RequestHeader("Authorization") String authHeader) {
