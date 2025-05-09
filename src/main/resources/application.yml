@@ -15,3 +15,9 @@ spring:
 
 otp:
   base-url: https://notify.eskiz.uz/api
+
+tax:
+  base-url: https://my3.soliq.uz/api
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

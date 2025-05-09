@@ -15,19 +15,18 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String companyName;
-    private String innNumber;
+    private String companyInnNumber;
     private String accountNumber;
     private String businessType;
     private String phoneNumber;
     private String email;
     private String websiteUrl;
     private String statusCompany;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
+    private String createdDate;
+    private String businessStructure;
+    private String companyAddress;
+    private String directorName;
+    private String directorAddress;
+    private String directorPhoneNumber;
+    private String directorEmail;
 }

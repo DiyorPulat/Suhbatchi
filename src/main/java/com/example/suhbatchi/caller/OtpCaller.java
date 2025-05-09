@@ -9,6 +9,7 @@ import io.netty.channel.ConnectTimeoutException;
 import io.netty.handler.timeout.ReadTimeoutException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
@@ -21,7 +22,7 @@ public class OtpCaller {
     private final WebClient webClient;
 
     @Autowired
-    public OtpCaller(WebClient webClient) {
+    public OtpCaller(@Qualifier("otpWebClient") WebClient webClient) {
         this.webClient = webClient;
     }
 

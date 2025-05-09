@@ -3,6 +3,7 @@ package com.example.suhbatchi.controller;
 import com.example.suhbatchi.config.JwtUtils;
 import com.example.suhbatchi.consts.ProjectConstants;
 import com.example.suhbatchi.dto.PasswordRequest;
+import com.example.suhbatchi.dto.PhoneNumberRequest;
 import com.example.suhbatchi.dto.VerifyRequest;
 import com.example.suhbatchi.service.AuthService;
 import com.example.suhbatchi.service.LoginService;
@@ -43,15 +44,15 @@ public class LoginController {
         return ResponseEntity.badRequest().body("Token is invalid or expired");
     }
 
-    @PostMapping("/send-otp")
-    public ResponseEntity<?> sendOtp(@RequestHeader("Authorization") String authHeader) throws NoSuchAlgorithmException {
+    @PostMapping("/resend-otp")
+    public ResponseEntity<?> sendOtp(@RequestHeader("Authorization") String authHeader, PhoneNumberRequest request) throws NoSuchAlgorithmException {
         if (authService.isValidToken(authHeader)) {
             String token = authHeader.substring(7);
             String phoneNumber = jwtUtils.extractUsername(token);
-            if (phoneNumber.isEmpty()) {
-                return ResponseEntity.badRequest().body("PhoneNumber in token is missing");
+            if (!phoneNumber.equals(request.phoneNumber())) {
+                return ResponseEntity.badRequest().body("It seems the phone number you entered during registration doesn't match. Could you please double-check and update it?");
             }
-            loginService.sendOtpForUpdatePassword(phoneNumber);
+            loginService.sendOtpForUpdatePassword(request.phoneNumber());
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().body("Token is invalid or expired");

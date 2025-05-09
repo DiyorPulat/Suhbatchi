@@ -16,5 +16,9 @@ public interface ProjectConstants {
 
     public static final String DEFAULT_FROM = "4546";
 
+    public static final String TYPE_OF_FULL = "full";
+
+    public static final String TAX_INFO_URL = "/remote-access-api/company/info/{INN}";
+
 
 }

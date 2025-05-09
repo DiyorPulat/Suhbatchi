@@ -5,6 +5,7 @@ import com.example.suhbatchi.consts.ProjectConstants;
 import com.example.suhbatchi.dto.*;
 import com.example.suhbatchi.service.AuthService;
 import com.example.suhbatchi.service.OtpService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,8 @@ public class AuthController {
     }
 
     @PostMapping(ProjectConstants.SAVE_NAMES)
-    public ResponseEntity<?> saveNames(@RequestBody NameRequest nameRequest, @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<?> saveNames(@RequestBody NameRequest nameRequest, HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
         if (authService.isValidToken(authHeader)) {
             String token = authHeader.substring(7);
             String phoneNumber = jwtUtils.extractUsername(token);
@@ -61,6 +63,23 @@ public class AuthController {
                 return ResponseEntity.badRequest().body("PhoneNumber in token is missing");
             }
             authService.savePassword(passwordRequest, phoneNumber);
+            authService.registerClient(phoneNumber);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().body("Token is invalid or expired");
+    }
+
+    @GetMapping("/resend-message")
+    public ResponseEntity<?> sendMessage(@RequestHeader("Authorization") String authHeader) {
+        if (authService.isValidToken(authHeader)) {
+            log.info("auth : {}", authHeader);
+            String token = authHeader.substring(7);
+            String phoneNumber = jwtUtils.extractUsername(token);
+            log.info("phone number : {}", phoneNumber);
+            if (phoneNumber.isEmpty()) {
+                return ResponseEntity.badRequest().body("PhoneNumber in token is missing");
+            }
+            log.info("phonenumeb : {}", phoneNumber);
             authService.registerClient(phoneNumber);
             return ResponseEntity.ok().build();
         }

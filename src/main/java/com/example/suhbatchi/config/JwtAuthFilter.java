@@ -39,11 +39,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         log.info("uri : {}", requestURI);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
-            return; // Agar token bo‘lmasa, tekshirmasdan requestni davom ettiramiz
+            return;
         }
         log.info("authHeader : {}", authHeader);
         System.out.println("Token: [" + authHeader + "]");
-        // Tokenni ajratib olish
         token = authHeader.substring(7);
         userId = jwtUtils.extractUsername(token);
         log.info("userId : {}", userId);
