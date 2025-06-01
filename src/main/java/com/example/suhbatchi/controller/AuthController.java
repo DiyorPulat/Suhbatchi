@@ -1,107 +1,78 @@
 package com.example.suhbatchi.controller;
 
-import com.example.suhbatchi.config.JwtUtils;
 import com.example.suhbatchi.consts.ProjectConstants;
-import com.example.suhbatchi.dto.*;
+import com.example.suhbatchi.dto.NameRequest;
+import com.example.suhbatchi.dto.PasswordRequest;
+import com.example.suhbatchi.dto.PhoneNumberRequest;
+import com.example.suhbatchi.dto.VerifyRequest;
+import com.example.suhbatchi.dto.response.ClientInfoResponse;
+import com.example.suhbatchi.dto.response.OtpIdResponse;
+import com.example.suhbatchi.entity.User;
 import com.example.suhbatchi.service.AuthService;
 import com.example.suhbatchi.service.OtpService;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.Map;
 
 @RestController
 @RequestMapping(ProjectConstants.AUTH)
-@Slf4j
 public class AuthController {
     private final AuthService authService;
     private final OtpService otpService;
-    private final JwtUtils jwtUtils;
 
-    public AuthController(AuthService authService, OtpService otpService, JwtUtils jwtUtils) {
+    public AuthController(AuthService authService, OtpService otpService) {
         this.authService = authService;
         this.otpService = otpService;
-        this.jwtUtils = jwtUtils;
     }
 
     @PostMapping(ProjectConstants.GET_PHONE)
-    public ResponseEntity<?> getNumber(@RequestBody PhoneNumberRequest phoneNumberRequest) {
-        if (authService.isValidPhoneNumber(phoneNumberRequest.phoneNumber())) {
-            String tempToken = jwtUtils.generateTemporaryToken(phoneNumberRequest.phoneNumber());
-            if (authService.checkUserExists(phoneNumberRequest.phoneNumber())) {
-                return ResponseEntity.ok().body(new UserExistResponse(true, tempToken));
-            }
-            return ResponseEntity.badRequest().body(new UserExistResponse(false, tempToken));
+    public ResponseEntity<?> getNumber(@RequestBody PhoneNumberRequest phoneNumberRequest, HttpServletResponse response) {
+        if (authService.checkUserExists(phoneNumberRequest.phoneNumber())) {
+            User user = authService.getClientIdByPhoneNumber(phoneNumberRequest.phoneNumber());
+
+            return new ResponseEntity<>(new ClientInfoResponse(user.getClientId()), HttpStatusCode.valueOf(200));
+        } else {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.badRequest().body("Invalid phone number format. It must start with 998 and have 9 digits.");
     }
 
     @PostMapping(ProjectConstants.SAVE_NAMES)
-    public ResponseEntity<?> saveNames(@RequestBody NameRequest nameRequest, HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authService.isValidToken(authHeader)) {
-            String token = authHeader.substring(7);
-            String phoneNumber = jwtUtils.extractUsername(token);
-            if (phoneNumber.isEmpty()) {
-                return ResponseEntity.badRequest().body("PhoneNumber in token is missing");
-            }
-            authService.saveName(nameRequest, phoneNumber);
-            return ResponseEntity.ok().build();
+    public ResponseEntity<?> saveNames(@RequestBody NameRequest nameRequest) {
+        if (nameRequest.phoneNumber().isEmpty()) {
+            return ResponseEntity.badRequest().body("PhoneNumber is missing");
         }
-        return ResponseEntity.badRequest().body("Token is invalid or expired");
+        String clientId = authService.saveName(nameRequest, nameRequest.phoneNumber());
+        return new ResponseEntity<>(new ClientInfoResponse(clientId), HttpStatusCode.valueOf(200));
+
     }
 
     @PostMapping(ProjectConstants.SAVE_PHONE)
-    public ResponseEntity<?> savePhone(@RequestBody PasswordRequest passwordRequest, @RequestHeader("Authorization") String authHeader) throws NoSuchAlgorithmException {
-        if (authService.isValidToken(authHeader)) {
-            String token = authHeader.substring(7);
-            String phoneNumber = jwtUtils.extractUsername(token);
-            if (phoneNumber.isEmpty()) {
-                return ResponseEntity.badRequest().body("PhoneNumber in token is missing");
-            }
-            authService.savePassword(passwordRequest, phoneNumber);
-            authService.registerClient(phoneNumber);
-            return ResponseEntity.ok().build();
+    public ResponseEntity<?> savePhone(@RequestBody PasswordRequest passwordRequest) throws NoSuchAlgorithmException {
+        if (passwordRequest.clientId().isEmpty()) {
+            return ResponseEntity.badRequest().body("Client id  is missing");
         }
-        return ResponseEntity.badRequest().body("Token is invalid or expired");
+        authService.savePassword(passwordRequest, passwordRequest.clientId());
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/resend-message")
-    public ResponseEntity<?> sendMessage(@RequestHeader("Authorization") String authHeader) {
-        if (authService.isValidToken(authHeader)) {
-            log.info("auth : {}", authHeader);
-            String token = authHeader.substring(7);
-            String phoneNumber = jwtUtils.extractUsername(token);
-            log.info("phone number : {}", phoneNumber);
-            if (phoneNumber.isEmpty()) {
-                return ResponseEntity.badRequest().body("PhoneNumber in token is missing");
-            }
-            log.info("phonenumeb : {}", phoneNumber);
-            authService.registerClient(phoneNumber);
-            return ResponseEntity.ok().build();
+    @GetMapping("/send-message")
+    public ResponseEntity<?> sendMessage(@RequestBody ClientInfoResponse clientInfoResponse) {
+        if (clientInfoResponse.getClientId().isEmpty()) {
+            return ResponseEntity.badRequest().body("Client id  is missing");
         }
-        return ResponseEntity.badRequest().body("Token is invalid or expired");
+        String id = authService.registerClient(clientInfoResponse.getClientId());
+        return new ResponseEntity<>(new OtpIdResponse(id), HttpStatusCode.valueOf(200));
     }
-
 
     @PostMapping("/verify-otp")
-    public ResponseEntity<?> verifyOtp(@RequestBody VerifyRequest verifyRequest, @RequestHeader("Authorization") String authHeader) {
-        if (authService.isValidToken(authHeader)) {
-            String token = authHeader.substring(7);
-            String phoneNumber = jwtUtils.extractUsername(token);
-            if (phoneNumber.isEmpty()) {
-                return ResponseEntity.badRequest().body("PhoneNumber in token is missing");
-            }
-            if (otpService.verifyOtpCode(verifyRequest, phoneNumber)) {
-                Map<String, String> map = authService.createPermanentToken(phoneNumber);
-                return ResponseEntity.ok().body(map);
-            }
-            return ResponseEntity.badRequest().body("Incorrect otp code");
+    public ResponseEntity<?> verifyOtp(@RequestBody VerifyRequest verifyRequest) {
+        if (otpService.verifyOtpCode(verifyRequest)) {
+            return ResponseEntity.ok().build();
         }
-        return ResponseEntity.badRequest().body("Token is invalid or expired");
+        return ResponseEntity.badRequest().build();
     }
 
 

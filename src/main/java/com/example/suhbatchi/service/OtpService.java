@@ -8,8 +8,8 @@ import com.example.suhbatchi.repostory.OtpTemplateRepostory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Random;
+import java.util.Scanner;
 
 @Service
 @Slf4j
@@ -65,18 +65,19 @@ public class OtpService {
             otpTemplate.setOtpCode(otpCode);
 
         }
-        log.info("otp code: {}", otpCode);
-        otpTemplate.setCreatedAt(LocalDateTime.now());
         OtpTemplate otpTemplate1 = otpTemplateRepostory.save(otpTemplate);
 
-        return otpTemplate1.getId().toString();
+        return otpTemplate1.getId().toString() ;
     }
 
 
-    public Boolean verifyOtpCode(VerifyRequest verifyRequest, String phoneNumber) {
-        OtpTemplate otpTemplate = otpTemplateRepostory.findOtpTemplateByPhoneNumber(phoneNumber);
+    public Boolean verifyOtpCode(VerifyRequest verifyRequest) {
+        System.out.println(verifyRequest);
+        System.out.println(verifyRequest.otpId());
+        OtpTemplate otpTemplate = otpTemplateRepostory.getReferenceById(Long.valueOf(verifyRequest.otpId()));
         return otpTemplate.getOtpCode().trim().equals(verifyRequest.code().trim());
     }
+
 
 
 }
