@@ -1,6 +1,7 @@
 package com.example.suhbatchi.service;
 
 import com.example.suhbatchi.caller.TaxCaller;
+import com.example.suhbatchi.dto.companyDtos.CompanyInfoResponseDto;
 import com.example.suhbatchi.dto.companyDtos.CompanyResponseDTO;
 import com.example.suhbatchi.dto.companyDtos.CompanySaveRequestDto;
 import com.example.suhbatchi.entity.Company;
@@ -23,18 +24,21 @@ public class CompanyService {
         this.companyMapper = companyMapper;
     }
 
-    public Object createCompany(CompanySaveRequestDto requestDto) {
+    public void createCompany(CompanySaveRequestDto requestDto) {
         log.info("createCompany");
         CompanyResponseDTO responseDTO = taxCaller.getTaxInfo(requestDto.getCompanyInnNumber());
         Company company = companyMapper.toCompanyEntity(responseDTO, requestDto);
-        try{
+        try {
             companyRepostory.save(company);
-        }catch (DataAccessException e){
-            log.error(e.getMessage());
+        } catch (DataAccessException e) {
+            log.error("Error saving company:{}", e.getMessage());
         }
+    }
 
 
-
-        return null;
+    public CompanyResponseDTO getCompanyByInnNumber(String innNumber) {
+        log.info("getCompanyByInnNumber");
+        CompanyResponseDTO responseDTO = taxCaller.getTaxInfo(innNumber);
+        return responseDTO;
     }
 }
