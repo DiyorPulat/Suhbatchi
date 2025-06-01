@@ -28,8 +28,8 @@ public class CompanyController {
     }
 
     @PostMapping("/save/company-info")
-    public ResponseEntity<?> saveCompanyInfo(@RequestBody CompanySaveRequestDto companySaveRequestDto) {
+    public ResponseEntity<?>  saveCompanyInfo(@RequestBody CompanySaveRequestDto companySaveRequestDto) {
         companyService.createCompany(companySaveRequestDto);
-        return (ResponseEntity<?>) ResponseEntity.ok();
+        return ResponseEntity.ok().build();
     }
 }

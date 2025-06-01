@@ -12,21 +12,31 @@ public class CompanyMapper {
     public Company toCompanyEntity(CompanyResponseDTO responseDTO, CompanySaveRequestDto requestDTO) {
         Company company = new Company();
         company.setCompanyInnNumber(requestDTO.getCompanyInnNumber());
-        company.setCompanyName(requestDTO.getCompanyName());
-        company.setStatusCompany(responseDTO.getCompany().getVatStatus());
-        company.setBusinessStructure(responseDTO.getCompany().getBusinessStructureDetail().getName_uz_latn());
-        company.setCreatedDate(responseDTO.getCompany().getRegistrationDate());
         company.setPhoneNumber(requestDTO.getPhoneNumber());
         company.setWebsiteUrl(requestDTO.getWebsiteUrl());
         company.setAccountNumber(requestDTO.getAccountNumber());
-        company.setEmail(responseDTO.getCompanyContact().getEmail());
-        company.setBusinessType(String.valueOf(responseDTO.getCompany().getBusinessType()));
-        company.setDirectorAddress(responseDTO.getDirectorAddress().getRegion() + " " +
-                  responseDTO.getDirectorAddress().getDistrict() + " "
-                + responseDTO.getDirectorAddress().getStreetName());
-        company.setDirectorEmail(responseDTO.getDirectorContact().getEmail());
-        company.setDirectorPhoneNumber(responseDTO.getDirectorContact().getPhone());
-        company.setDirectorName(responseDTO.getDirector().getFirstName() + " " + responseDTO.getDirector().getLastName());
+
+        if (responseDTO.getCompany() != null) {
+            company.setCompanyName(responseDTO.getCompany().getShortName());
+            company.setStatusCompany(responseDTO.getCompany().getVatStatus());
+            company.setCreatedDate(responseDTO.getCompany().getRegistrationDate());
+            company.setBusinessType(String.valueOf(responseDTO.getCompany().getBusinessType()));
+            if (responseDTO.getCompany().getBusinessStructureDetail() != null) {
+                company.setBusinessStructure(responseDTO.getCompany().getBusinessStructureDetail().getName_uz_latn());
+            }
+        }
+        if (responseDTO.getCompanyContact() != null) {
+            company.setEmail(responseDTO.getCompanyContact().getEmail());
+        }
+        if (responseDTO.getDirectorAddress() != null) {
+            company.setDirectorAddress(responseDTO.getDirectorAddress().getRegion().getName_uz_latn() + " " +
+                    responseDTO.getDirectorAddress().getDistrict().getName_uz_cyrl() + " "
+                    + responseDTO.getDirectorAddress().getStreetName());
+            company.setDirectorEmail(responseDTO.getDirectorContact().getEmail());
+            company.setDirectorPhoneNumber(responseDTO.getDirectorContact().getPhone());
+            company.setDirectorName(responseDTO.getDirector().getFirstName() + " " + responseDTO.getDirector().getLastName());
+        }
+
         return company;
     }
 

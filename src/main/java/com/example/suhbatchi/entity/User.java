@@ -19,6 +19,7 @@ public class User {
     private String lastName;
     private String phoneNumber;
     private String passwordHash;
+    private String pricing;
     private Boolean IsActiveUser;
 
     public Boolean getActiveUser() {
