@@ -1,7 +1,7 @@
 package com.example.suhbatchi.controller;
 
 import com.example.suhbatchi.config.JwtUtils;
-import com.example.suhbatchi.dto.AuthenticationRequest;
+import com.example.suhbatchi.dto.request.AuthenticationRequest;
 import com.example.suhbatchi.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -71,9 +71,7 @@ public class AuthenticationController {
 
         log.info("Authenticating request: {}", request.getPhoneNumber());
 
-        if (!authService.isValidPhoneNumber(request.getPhoneNumber())) {
-            return ResponseEntity.status(400).body(Map.of("error", "Invalid phone number"));
-        }
+        authService.isValidPhoneNumber(request.getPhoneNumber());
 
         try {
             authenticationManager.authenticate(

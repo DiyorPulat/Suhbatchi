@@ -113,4 +113,9 @@ public class JwtUtils {
         Claims claims = extractAllClaims(token);
         return claims.containsKey("temp") && (Boolean) claims.get("temp");
     }
+
+    public boolean isActiveUser(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.containsKey("active") && (Boolean) claims.get("active");
+    }
 }

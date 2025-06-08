@@ -42,10 +42,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
         log.info("authHeader : {}", authHeader);
+
         System.out.println("Token: [" + authHeader + "]");
+
         token = authHeader.substring(7);
         userId = jwtUtils.extractUsername(token);
         log.info("userId : {}", userId);
+
         if (jwtUtils.isTemporaryToken(token)) {
             if (request.getRequestURI().startsWith("/auth/") || request.getRequestURI().startsWith("/login/")) {
                 log.info("userId : {}", "diyor");
@@ -54,6 +57,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Temporary token not allowed here");
             return;
+        }
+
+        if (jwtUtils.isActiveUser(token)){
+
         }
 
 

@@ -1,9 +1,9 @@
 package com.example.suhbatchi.service;
 
 import com.example.suhbatchi.caller.TaxCaller;
-import com.example.suhbatchi.dto.companyDtos.CompanyInfoResponseDto;
-import com.example.suhbatchi.dto.companyDtos.CompanyResponseDTO;
-import com.example.suhbatchi.dto.companyDtos.CompanySaveRequestDto;
+import com.example.suhbatchi.dto.request.CompanySaveRequestDto;
+import com.example.suhbatchi.dto.response.CompanyInfoResponseDto;
+import com.example.suhbatchi.dto.response.CompanyResponseDTO;
 import com.example.suhbatchi.entity.Company;
 import com.example.suhbatchi.mapper.CompanyMapper;
 import com.example.suhbatchi.repostory.CompanyRepostory;
@@ -36,9 +36,13 @@ public class CompanyService {
     }
 
 
-    public CompanyResponseDTO getCompanyByInnNumber(String innNumber) {
+    public CompanyInfoResponseDto getCompanyByInnNumber(String innNumber) {
         log.info("getCompanyByInnNumber");
-        CompanyResponseDTO responseDTO = taxCaller.getTaxInfo(innNumber);
-        return responseDTO;
+        return companyRepostory.findCompanyByCompanyInnNumber(innNumber)
+                .map(CompanyInfoResponseDto::of)
+                .orElseGet(() -> {
+                    CompanyResponseDTO responseDTO = taxCaller.getTaxInfo(innNumber);
+                    return companyMapper.toCompanyInfoResponseDto(responseDTO);
+                });
     }
 }

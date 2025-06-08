@@ -1,7 +1,7 @@
 package com.example.suhbatchi.caller;
 
 import com.example.suhbatchi.consts.ProjectConstants;
-import com.example.suhbatchi.dto.companyDtos.CompanyResponseDTO;
+import com.example.suhbatchi.dto.response.CompanyResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -21,4 +21,17 @@ public interface ProjectConstants {
     public static final String TAX_INFO_URL = "/remote-access-api/company/info/{INN}";
 
 
+    public static final String PRICING_PLAN = "/pricing";
+    public static final String CREATE_PRICING_PLAN = "/create";
+    public static final String UPDATE_PRICING_PLAN = "/update";
+    public static final String DELETE_PRICING_PLAN = "/delete";
+    public static final String GET_PRICING_PLAN = "/get";
+    public static final String GET_ALL_PRICING_PLAN = "/getAll";
+
+
+    public static final String USER_CONTROL = "/user-control";
+    public static final String GET_USER_STATUS = "/get";
+    public static final String PERFORM_USER_STATUS = "/perform";
+    public static final String GET_ALL_USER = "/getall";
+    public static final String USER_ACTIVATE = "/activate";
 }

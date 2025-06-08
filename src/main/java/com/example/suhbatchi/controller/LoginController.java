@@ -2,12 +2,14 @@ package com.example.suhbatchi.controller;
 
 import com.example.suhbatchi.config.JwtUtils;
 import com.example.suhbatchi.consts.ProjectConstants;
-import com.example.suhbatchi.dto.PasswordRequest;
-import com.example.suhbatchi.dto.PhoneNumberRequest;
-import com.example.suhbatchi.dto.VerifyRequest;
+import com.example.suhbatchi.dto.request.PasswordRequest;
+import com.example.suhbatchi.dto.request.PhoneNumberRequest;
+import com.example.suhbatchi.dto.request.VerifyRequest;
+import com.example.suhbatchi.exception.PhoneMismatchException;
 import com.example.suhbatchi.service.AuthService;
 import com.example.suhbatchi.service.LoginService;
 import com.example.suhbatchi.service.OtpService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,64 +30,35 @@ public class LoginController {
         this.jwtUtils = jwtUtils;
     }
 
-    @GetMapping("/verify-password")
-    public ResponseEntity<?> verifyPassword(@RequestBody PasswordRequest passwordRequest, @RequestHeader("Authorization") String authHeader) throws NoSuchAlgorithmException {
-        if (authService.isValidToken(authHeader)) {
-            String token = authHeader.substring(7);
-            String phoneNumber = jwtUtils.extractUsername(token);
-            if (phoneNumber.isEmpty()) {
-                return ResponseEntity.badRequest().body("PhoneNumber in token is missing");
-            }
-            if (loginService.checkPassword(phoneNumber, passwordRequest.password())) {
-                return ResponseEntity.ok().build();
-            }
-            return ResponseEntity.badRequest().body("Incorrect password");
-        }
-        return ResponseEntity.badRequest().body("Token is invalid or expired");
+    @PostMapping("/verify-password")
+    public ResponseEntity<?> verifyPassword(@RequestBody PasswordRequest passwordRequest, HttpServletRequest request) throws NoSuchAlgorithmException {
+        String phoneNumber = authService.getPhoneNumberFromToken(request);
+        loginService.checkPassword(phoneNumber, passwordRequest.password());
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/resend-otp")
-    public ResponseEntity<?> sendOtp(@RequestHeader("Authorization") String authHeader, PhoneNumberRequest request) throws NoSuchAlgorithmException {
-        if (authService.isValidToken(authHeader)) {
-            String token = authHeader.substring(7);
-            String phoneNumber = jwtUtils.extractUsername(token);
-            if (!phoneNumber.equals(request.phoneNumber())) {
-                return ResponseEntity.badRequest().body("It seems the phone number you entered during registration doesn't match. Could you please double-check and update it?");
-            }
-            loginService.sendOtpForUpdatePassword(request.phoneNumber());
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().body("Token is invalid or expired");
+    public ResponseEntity<?> sendOtp(@RequestBody PhoneNumberRequest phoneNumberRequest, HttpServletRequest request) throws NoSuchAlgorithmException {
+        String phoneNumber = authService.getPhoneNumberFromToken(request);
+        authService.checkPhoneNumbers(phoneNumber, phoneNumberRequest.phoneNumber());
+        loginService.sendOtpForUpdatePassword(phoneNumberRequest.phoneNumber());
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/veriy-otp")
-    public ResponseEntity<?> verifyOtp(@RequestBody VerifyRequest verifyRequest, @RequestHeader("Authorization") String authHeader) {
-        if (authService.isValidToken(authHeader)) {
-            String token = authHeader.substring(7);
-            String phoneNumber = jwtUtils.extractUsername(token);
-            if (phoneNumber.isEmpty()) {
-                return ResponseEntity.badRequest().body("PhoneNumber in token is missing");
-            }
-            if (otpService.verifyOtpCode(verifyRequest, phoneNumber)) {
-                return ResponseEntity.ok().build();
-            }
-            return ResponseEntity.badRequest().body("Incorrect otp code");
-        }
-        return ResponseEntity.badRequest().body("Token is invalid or expired");
+    public ResponseEntity<?> verifyOtp(@RequestBody VerifyRequest verifyRequest, HttpServletRequest request) {
+        String phoneNumber = authService.getPhoneNumberFromToken(request);
+        otpService.verifyOtpCode(verifyRequest, phoneNumber);
+        return ResponseEntity.ok().build();
     }
+
 
     @PostMapping("/update-password")
-    public ResponseEntity<?> updatePassword(@RequestBody PasswordRequest passwordRequest, @RequestHeader("Authorization") String authHeader) throws NoSuchAlgorithmException {
-        if (authService.isValidToken(authHeader)) {
-            String token = authHeader.substring(7);
-            String phoneNumber = jwtUtils.extractUsername(token);
-            if (phoneNumber.isEmpty()) {
-                return ResponseEntity.badRequest().body("PhoneNumber in token is missing");
-            }
-            loginService.updatePassword(phoneNumber, passwordRequest.password());
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().body("Token is invalid or expired");
+    public ResponseEntity<?> updatePassword(@RequestBody PasswordRequest passwordRequest, HttpServletRequest request) throws NoSuchAlgorithmException {
+        String phoneNumber = authService.getPhoneNumberFromToken(request);
+        loginService.updatePassword(phoneNumber, passwordRequest.password());
+        return ResponseEntity.ok().build();
     }
-
 }
+
+

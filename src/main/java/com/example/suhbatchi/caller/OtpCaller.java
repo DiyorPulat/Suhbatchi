@@ -1,10 +1,10 @@
 package com.example.suhbatchi.caller;
 
 import com.example.suhbatchi.consts.ProjectConstants;
-import com.example.suhbatchi.dto.OtpRequest;
-import com.example.suhbatchi.dto.OtpResponse;
-import com.example.suhbatchi.dto.OtpTokenRequest;
-import com.example.suhbatchi.dto.OtpTokenResponse;
+import com.example.suhbatchi.dto.request.OtpRequest;
+import com.example.suhbatchi.dto.response.OtpResponse;
+import com.example.suhbatchi.dto.request.OtpTokenRequest;
+import com.example.suhbatchi.dto.response.OtpTokenResponse;
 import io.netty.channel.ConnectTimeoutException;
 import io.netty.handler.timeout.ReadTimeoutException;
 import lombok.extern.slf4j.Slf4j;

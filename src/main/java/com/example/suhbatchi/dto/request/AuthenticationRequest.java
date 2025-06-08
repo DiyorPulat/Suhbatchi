@@ -1,4 +1,4 @@
-package com.example.suhbatchi.dto;
+package com.example.suhbatchi.dto.request;
 
 import lombok.Getter;
 import org.springframework.stereotype.Service;

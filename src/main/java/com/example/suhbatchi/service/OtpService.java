@@ -2,8 +2,13 @@ package com.example.suhbatchi.service;
 
 import com.example.suhbatchi.caller.OtpCaller;
 import com.example.suhbatchi.consts.ProjectConstants;
-import com.example.suhbatchi.dto.*;
+import com.example.suhbatchi.dto.request.OtpRequest;
+import com.example.suhbatchi.dto.request.OtpTokenRequest;
+import com.example.suhbatchi.dto.request.VerifyRequest;
+import com.example.suhbatchi.dto.response.OtpResponse;
+import com.example.suhbatchi.dto.response.OtpTokenResponse;
 import com.example.suhbatchi.entity.OtpTemplate;
+import com.example.suhbatchi.exception.OtpCodeInvalidException;
 import com.example.suhbatchi.repostory.OtpTemplateRepostory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -73,8 +78,10 @@ public class OtpService {
     }
 
 
-    public Boolean verifyOtpCode(VerifyRequest verifyRequest, String phoneNumber) {
+    public void verifyOtpCode(VerifyRequest verifyRequest, String phoneNumber) {
         OtpTemplate otpTemplate = otpTemplateRepostory.findOtpTemplateByPhoneNumber(phoneNumber);
-        return otpTemplate.getOtpCode().trim().equals(verifyRequest.code().trim());
+        if (!otpTemplate.getOtpCode().trim().equals(verifyRequest.code().trim())){
+            throw new OtpCodeInvalidException("OTP code is incorrect");
+        }
     }
 }

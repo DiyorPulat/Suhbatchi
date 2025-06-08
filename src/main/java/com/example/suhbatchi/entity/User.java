@@ -19,54 +19,11 @@ public class User {
     private String lastName;
     private String phoneNumber;
     private String passwordHash;
-    private String pricing;
     private Boolean IsActiveUser;
-
-    public Boolean getActiveUser() {
-        return IsActiveUser;
-    }
-
-    public void setActiveUser(Boolean activeUser) {
-        IsActiveUser = activeUser;
-    }
-
-    public void setClientId(String client_id) {
-        this.clientId = client_id;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pricing_id")
+    private PricingPlan pricingPlan;
 }

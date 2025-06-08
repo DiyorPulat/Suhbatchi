@@ -10,4 +10,10 @@ public class ClientInfoResponse {
     public String getClientId() {
         return clientId;
     }
+
+    public static record UserExistResponse(
+            Boolean userExist,
+            String token
+    ) {
+    }
 }

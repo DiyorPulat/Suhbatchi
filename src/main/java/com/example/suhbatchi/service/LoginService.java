@@ -1,6 +1,7 @@
 package com.example.suhbatchi.service;
 
 import com.example.suhbatchi.entity.User;
+import com.example.suhbatchi.exception.UserNotFoundException;
 import com.example.suhbatchi.repostory.UserRepostory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,19 +24,25 @@ public class LoginService {
     }
 
 
-    public Boolean checkPassword(String phoneNumber, String password) throws NoSuchAlgorithmException {
-        Optional<User> user = userRepostory.findByPhoneNumber(phoneNumber);
-        if (user.isPresent()) {
-            String passwordInput = user.get().getPasswordHash();
-            String passwordOutput = authService.makePasswordHash(password);
-            return passwordInput.equals(passwordOutput);
-        }
-        log.error("checkPassword user not found {}", phoneNumber);
-        return false;
+    public void checkPassword(String phoneNumber, String password){
+        userRepostory.findByPhoneNumber(phoneNumber).ifPresentOrElse(user -> {
+            String passwordInput = user.getPasswordHash();
+            String passwordOutput = "";
+            try {
+                passwordOutput = authService.makePasswordHash(password);
+            }catch (NoSuchAlgorithmException e) {
+                log.error(e.getMessage());
+            }
+            if (!passwordOutput.equals(passwordInput)) {
+                throw new RuntimeException("Incorrect password");
+            }
+        }, () -> {
+            throw new UserNotFoundException();
+        });
     }
 
-    public String sendOtpForUpdatePassword(String phoneNumber) throws NoSuchAlgorithmException {
-        return otpService.makeMessage(phoneNumber, 2);
+    public void sendOtpForUpdatePassword(String phoneNumber){
+        otpService.makeMessage(phoneNumber, 2);
     }
 
     public void updatePassword(String phoneNumber, String password) throws NoSuchAlgorithmException {

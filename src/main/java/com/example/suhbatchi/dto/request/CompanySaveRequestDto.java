@@ -1,4 +1,4 @@
-package com.example.suhbatchi.dto.companyDtos;
+package com.example.suhbatchi.dto.request;
 
 import lombok.Data;
 

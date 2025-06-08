@@ -1,12 +1,11 @@
 package com.example.suhbatchi.controller;
 
 import com.example.suhbatchi.caller.TaxCaller;
-import com.example.suhbatchi.dto.companyDtos.CompanyInfoResponseDto;
-import com.example.suhbatchi.dto.companyDtos.CompanyResponseDTO;
-import com.example.suhbatchi.dto.companyDtos.CompanySaveRequestDto;
+import com.example.suhbatchi.dto.response.CompanyInfoResponseDto;
+import com.example.suhbatchi.dto.response.CompanyResponseDTO;
+import com.example.suhbatchi.dto.request.CompanySaveRequestDto;
 import com.example.suhbatchi.service.CompanyService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +22,7 @@ public class CompanyController {
     }
 
     @GetMapping("/company-info/{INN}")
-    public CompanyResponseDTO getInfo(@PathVariable String INN) {
+    public CompanyInfoResponseDto getInfo(@PathVariable String INN) {
         return companyService.getCompanyByInnNumber(INN);
     }
 

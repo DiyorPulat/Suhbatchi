@@ -1,4 +1,4 @@
-package com.example.suhbatchi.dto;
+package com.example.suhbatchi.dto.response;
 
 public record OtpTokenResponse(String message, Data data, String tokenType) {
 

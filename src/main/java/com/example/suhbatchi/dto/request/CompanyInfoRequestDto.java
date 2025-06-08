@@ -1,10 +1,10 @@
-package com.example.suhbatchi.dto.companyDtos;
+package com.example.suhbatchi.dto.request;
 
 import lombok.Data;
 
 @Data
 public class CompanyInfoRequestDto {
-    final String Inn;
+    String Inn;
 
     public CompanyInfoRequestDto(String inn) {
         Inn = inn;
