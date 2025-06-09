@@ -58,12 +58,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Temporary token not allowed here");
             return;
         }
-
-        if (jwtUtils.isActiveUser(token)){
-
-        }
-
-
         if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
 
