@@ -11,6 +11,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedOrigins("*")  // Or specify your domain, e.g. https://suhbatchi-production.up.railway.app
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .allowCredentials(true);
+                .allowCredentials(false);
     }
 }
