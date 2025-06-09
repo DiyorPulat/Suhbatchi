@@ -6,7 +6,7 @@ import com.example.suhbatchi.dto.request.PasswordRequest;
 import com.example.suhbatchi.entity.User;
 import com.example.suhbatchi.exception.InvalidFormatPhoneException;
 import com.example.suhbatchi.exception.PhoneMismatchException;
-import com.example.suhbatchi.exception.SecurityException;
+import com.example.suhbatchi.exception.TokenException;
 import com.example.suhbatchi.repostory.UserRepostory;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -41,10 +41,10 @@ public class AuthService {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             if (!jwtUtils.isTokenExpired(token)) {
-                throw new SecurityException("Token is expired");
+                throw new TokenException("Token is expired");
             }
         } else {
-            throw new SecurityException("Invalid token");
+            throw new TokenException("Invalid token");
         }
     }
 
@@ -54,7 +54,7 @@ public class AuthService {
         String token = authHeader.substring(7);
         String phoneNumber = jwtUtils.extractUsername(token);
         if (phoneNumber == null) {
-            throw new SecurityException("PhoneNumber in token is missing:" + phoneNumber);
+            throw new TokenException("PhoneNumber in token is missing:" + phoneNumber);
         }
         return phoneNumber;
     }
