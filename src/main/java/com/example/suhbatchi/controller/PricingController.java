@@ -45,7 +45,7 @@ public class PricingController {
                     )
             }
     )
-    @PutMapping(ProjectConstants.UPDATE_PRICING_PLAN + "/{id}")
+    @PostMapping(ProjectConstants.UPDATE_PRICING_PLAN + "/{id}")
     public void updatePricingPlan(@PathVariable(name = "id") Long id, PricingPlanRequest request) {
         pricingService.updatePricingPlan(request, id);
     }
