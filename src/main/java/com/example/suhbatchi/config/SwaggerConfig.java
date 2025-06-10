@@ -20,7 +20,6 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(info())
-                .servers(List.of(new Server().url("https://suhbatchi-production.up.railway.app")))
                 .addSecurityItem(new SecurityRequirement().addList("Authorization"))
                 .components(new Components()
                         .addSecuritySchemes("Authorization",
