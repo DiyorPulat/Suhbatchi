@@ -56,6 +56,14 @@ public class ExceptionHandlingController extends ResponseEntityExceptionHandler 
     }
 
 
+    @ExceptionHandler(PasswordInCorrectException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<ErrorResponse> handleInvalidPasswordInCorrect(PasswordInCorrectException exception) {
+        ErrorResponse errorResponse = ErrorResponse.getErrorResponse(HttpStatus.FORBIDDEN.value(), exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
+
+
 
 
 }

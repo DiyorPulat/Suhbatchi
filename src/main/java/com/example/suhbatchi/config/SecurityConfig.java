@@ -41,7 +41,7 @@ public class SecurityConfig {
                                 "/v3/api-docs/**")
                         .permitAll()
                         .requestMatchers("/auth/**", "/login/**", "/auth/authenticate",
-                                "/company/**","/pricing/**","/user-control/**")
+                                "/pricing/**","/user-control/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -1,6 +1,7 @@
 package com.example.suhbatchi.service;
 
 import com.example.suhbatchi.entity.User;
+import com.example.suhbatchi.exception.PasswordInCorrectException;
 import com.example.suhbatchi.exception.UserNotFoundException;
 import com.example.suhbatchi.repostory.UserRepostory;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ public class LoginService {
                 log.error(e.getMessage());
             }
             if (!passwordOutput.equals(passwordInput)) {
-                throw new RuntimeException("Incorrect password");
+                throw new PasswordInCorrectException("Incorrect password");
             }
         }, () -> {
             throw new UserNotFoundException();

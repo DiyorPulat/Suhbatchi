@@ -71,10 +71,12 @@ public class JwtUtils {
         return createToken(claims, clientId);
     }
 
-    public String refreshToken(String clientId) {
+    public String refreshToken(String clientId,String phoneNumber) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("refresh", true);
         claims.put("temp", false);
+        claims.put("clientId", clientId);
+        claims.put("phoneNumber", phoneNumber);
         return createRefreshToken(claims, clientId);
     }
 
@@ -104,6 +106,7 @@ public class JwtUtils {
     }
 
 
+
     // Checks if the token is expired
     public boolean isTokenExpired(String token) {
         return extractExpiration(token).after(new Date());
@@ -117,5 +120,10 @@ public class JwtUtils {
     public boolean isActiveUser(String token) {
         Claims claims = extractAllClaims(token);
         return claims.containsKey("active") && (Boolean) claims.get("active");
+    }
+
+    public boolean isRefreshToken(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.containsKey("refresh") && (Boolean) claims.get("refresh");
     }
 }

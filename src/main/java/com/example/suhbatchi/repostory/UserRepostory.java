@@ -17,4 +17,7 @@ public interface UserRepostory extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT * FROM users WHERE IsActiveUser = 0",nativeQuery = true)
     List<User> findUserByIsActiveUser(Boolean isActiveUser);
+
+
+    Boolean existsByClientId(String clientId);
 }

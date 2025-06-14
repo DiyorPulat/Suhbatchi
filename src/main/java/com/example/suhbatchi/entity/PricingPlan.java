@@ -5,10 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
+    @Data
+    @Entity
+    @NoArgsConstructor
+    @AllArgsConstructor
 public class PricingPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
