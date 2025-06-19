@@ -1,9 +1,6 @@
 package com.example.suhbatchi.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +16,7 @@ public class SessionModel {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String sessionId;
     private String phoneNumber;
+    @Column(length = 3000)
     private String refreshToken;
     private LocalDate createdDate;
     private LocalDate expiryDate;
