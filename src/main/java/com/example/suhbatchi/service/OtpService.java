@@ -80,6 +80,7 @@ public class OtpService {
 
     public void verifyOtpCode(VerifyRequest verifyRequest, String phoneNumber) {
         OtpTemplate otpTemplate = otpTemplateRepostory.findOtpTemplateByPhoneNumber(phoneNumber);
+        log.info("verifyOtpCode: {} {} {}", otpTemplate.getOtpCode(), otpTemplate.getPhoneNumber(),verifyRequest.code());
         if (!otpTemplate.getOtpCode().trim().equals(verifyRequest.code().trim())){
             throw new OtpCodeInvalidException("OTP code is incorrect");
         }
