@@ -126,6 +126,7 @@ public class AuthController {
     )
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@RequestBody VerifyRequest verifyRequest, HttpServletRequest request) {
+        log.error("verifyOtp: {}, {}",verifyRequest, request);
         String phoneNumber = authService.getPhoneNumberFromToken(request);
         otpService.verifyOtpCode(verifyRequest, phoneNumber);
         Map<String, String> map = authService.createPermanentToken(phoneNumber);
